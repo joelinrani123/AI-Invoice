@@ -1,7 +1,7 @@
 import Invoice from "../models/invoiceModel.js";
 import path from "path";
 
-const API_BASE = "http://localhost:4000";
+
 // helper
 
 function computeTotals(items = [], taxPercent = 0) {
@@ -49,7 +49,7 @@ function uploadedFilesToUrls(req) {
         fileArr[0].filename ||
         (fileArr[0].path && path.basename(fileArr[0].path));
       if (filename) {
-        urls[mapping[field]] = `${API_BASE}/uploads/${filename}`;
+       urls[mapping[field]] = `${req.protocol}://${req.get("host")}/uploads/${filename}`;
       }
     }
   }

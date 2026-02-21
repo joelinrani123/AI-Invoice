@@ -13,7 +13,7 @@ import businessProfileRouter from "./routes/businessProfileRouter.js";
 import aiInvoiceRouter from "./routes/aiInvoiceRouter.js";
 
 const app = express();
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 
 
 // database
@@ -39,7 +39,7 @@ app.use(
   })
 );
 
-app.use(clerkMiddleware());
+// app.use(clerkMiddleware());
 
 app.use(express.json({ limit: "20mb" }));
 app.use(express.urlencoded({ extended: true, limit: "20mb" }));
@@ -59,5 +59,5 @@ app.get("/", (req, res) => {
 
 // To start server
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+  console.log(`Server running at port :${PORT}`);
 });

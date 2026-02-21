@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { invoicesStyles } from "../assets/dummyStyles";
 import { useAuth } from "@clerk/clerk-react";
 
-const API_BASE = "https://invoiceai-l18d.onrender.com/";
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 function resolveImageUrl(url) {
   if (!url) return null;
@@ -26,7 +26,7 @@ function resolveImageUrl(url) {
       }
       return parsed.href;
     } catch (e) {
-      // fall through to relative handling
+    
     }
   }
   return `${API_BASE.replace(/\/+$/, "")}/${s.replace(/^\/+/, "")}`;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect} from "react";
 import {
   businessProfileStyles,
   iconColors,
@@ -6,8 +6,7 @@ import {
 } from "../assets/dummyStyles";
 import { useAuth, useUser } from "@clerk/clerk-react";
 
-const API_BASE = "https://invoiceai-l18d.onrender.com/";
-
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 // icons
 const UploadIcon = ({ className = "w-5 h-5" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -51,19 +50,8 @@ function resolveImageUrl(url) {
   if (!url) return null;
   const s = String(url).trim();
   if (s.startsWith("blob:") || s.startsWith("data:")) return s;
-  if (/^https?:\/\//i.test(s)) {
-    try {
-      const parsed = new URL(s);
-      if (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1") {
-        const path = parsed.pathname + (parsed.search || "") + (parsed.hash || "");
-        return `${API_BASE.replace(/\/+$/, "")}${path}`;
-      }
-      return parsed.href;
-    } catch {}
-  }
-  return `${API_BASE.replace(/\/+$/, "")}/${s.replace(/^\/+/, "")}`;
+  return s; 
 }
-
 // component
 export default function BusinessProfile() {
   const { getToken, isSignedIn } = useAuth();
@@ -83,6 +71,44 @@ export default function BusinessProfile() {
     stamp: null,
     signature: null,
   });
+
+useEffect(() => {
+  async function loadProfile() {
+    try {
+      const token = await getAuthToken();
+      if (!token) return;
+
+      const res = await fetch(`${API_BASE}/api/businessProfile/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const json = await res.json();
+      if (!res.ok) return;
+
+      if (json?.data) {
+        const p = json.data;
+
+        setMeta({
+          ...p,
+          profileId: p._id,
+        });
+
+        setPreviews({
+          logo: resolveImageUrl(p.logoUrl),
+          stamp: resolveImageUrl(p.stampUrl),
+          signature: resolveImageUrl(p.signatureUrl),
+        });
+      }
+    } catch (err) {
+      console.error("Failed to load profile:", err);
+    }
+  }
+
+  loadProfile();
+}, []);
+
 async function getAuthToken() {
   if (typeof getToken !== "function") return null;
   try {
@@ -178,15 +204,14 @@ async function getAuthToken() {
         : `${API_BASE}/api/businessProfile`;
       const method = profileId ? "PUT" : "POST";
 
-     const res = await fetch(url, {
-  method: "GET",
+const res = await fetch(url, {
+  method,
   headers: {
     Authorization: `Bearer ${token}`,
-    Accept: "application/json",
+    
   },
-  credentials: "include", 
+  body: fd,
 });
-
 
       const json = await res.json().catch(() => null);
       if (!res.ok) {

@@ -9,7 +9,7 @@ import {
 } from "../assets/dummyStyles";
 
 // api base
-const API_BASE = "https://invoiceai-l18d.onrender.com/";
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 // helpers
 function resolveImageUrl(url) {

@@ -1,27 +1,28 @@
 import { getAuth } from "@clerk/express";
 import BusinessProfile from "../models/businessProfileModel.js";
 
-const API_BASE = "http://localhost:4000";
 
-// To convert files to url
 function uploadedFilesToUrls(req) {
   const urls = {};
   if (!req.files) return urls;
 
+  const base = `${req.protocol}://${req.get("host")}`;
+
   if (req.files.logoName?.[0]) {
-    urls.logoUrl = `${API_BASE}/uploads/${req.files.logoName[0].filename}`;
+    urls.logoUrl = `${base}/uploads/${req.files.logoName[0].filename}`;
   }
 
   if (req.files.stampName?.[0]) {
-    urls.stampUrl = `${API_BASE}/uploads/${req.files.stampName[0].filename}`;
+    urls.stampUrl = `${base}/uploads/${req.files.stampName[0].filename}`;
   }
 
   if (req.files.signatureNameMeta?.[0]) {
-    urls.signatureUrl = `${API_BASE}/uploads/${req.files.signatureNameMeta[0].filename}`;
+    urls.signatureUrl = `${base}/uploads/${req.files.signatureNameMeta[0].filename}`;
   }
 
   return urls;
 }
+
 // create business profile
 export async function createBusinessProfile(req, res) {
   try {
@@ -60,7 +61,7 @@ export async function createBusinessProfile(req, res) {
     });
   } catch (err) {
     console.error("Create profile error:", err);
-    res.status(500).json({ success: false, message: "Server error" });
+    return res.status(500).json({ success: false, message: "Server error" });
   }
 }
 
@@ -105,10 +106,11 @@ export async function updateBusinessProfile(req, res) {
     });
   } catch (err) {
     console.error("Update profile error:", err);
-    res.status(500).json({ success: false, message: "Server error" });
+    return res.status(500).json({ success: false, message: "Server error" });
   }
 }
-// Get my business profile
+
+// get my business profile
 export async function getMyBusinessProfile(req, res) {
   try {
     const { userId } = getAuth(req);
@@ -125,6 +127,6 @@ export async function getMyBusinessProfile(req, res) {
     return res.json({ success: true, data: profile });
   } catch (err) {
     console.error("Get profile error:", err);
-    res.status(500).json({ success: false, message: "Server error" });
+    return res.status(500).json({ success: false, message: "Server error" });
   }
 }
