@@ -5,7 +5,7 @@ import { useAuth } from "@clerk/clerk-react";
 import KpiCard from "../components/KpiCard";
 import StatusBadge from "../components/StatusBadge";
 
-const API_BASE = "http://localhost:4000";
+const API_BASE = "https://invoiceai-l18d.onrender.com/";
 
 const FileTextIcon = ({ className = "w-4 h-4" }) => (
   <svg

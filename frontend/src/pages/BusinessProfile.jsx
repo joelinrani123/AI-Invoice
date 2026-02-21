@@ -6,7 +6,7 @@ import {
 } from "../assets/dummyStyles";
 import { useAuth, useUser } from "@clerk/clerk-react";
 
-const API_BASE = "http://localhost:4000";
+const API_BASE = "https://invoiceai-l18d.onrender.com/";
 
 // icons
 const UploadIcon = ({ className = "w-5 h-5" }) => (

@@ -9,7 +9,7 @@ import {
 } from "../assets/dummyStyles";
 
 // api base
-const API_BASE = "http://localhost:4000";
+const API_BASE = "https://invoiceai-l18d.onrender.com/";
 
 // helpers
 function resolveImageUrl(url) {
