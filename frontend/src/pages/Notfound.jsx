@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 const Notfound = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-white">
