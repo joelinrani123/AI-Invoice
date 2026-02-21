@@ -20,9 +20,21 @@ const PORT = 4000;
 connectDB();
 
 // middleware
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://ai-invoice-joelin.onrender.com",
+];
+
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: function (origin, callback) {
+      
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS not allowed"));
+      }
+    },
     credentials: true,
   })
 );
